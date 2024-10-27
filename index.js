@@ -13,26 +13,30 @@ dotenv.config();
 const app = express();
 const sessionStore = SequelizeStore(session.Store);
 const store = new sessionStore({
-    db: db
-})
+  db: db,
+});
 // (async()=>{
 //     await db.sync();
 // })();
 
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESS_SECRET,
     resave: false,
     saveUninitialized: true,
     store: store,
     cookie: {
-        secure: 'auto'
-    }
-}))
+      secure: "auto",
+    },
+  })
+);
 
-app.use(cors({
-    credentials:true,
-    origin: 'http://localhost:8800'
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json());
 app.use(UserRoute);
 app.use(BookRoute);
@@ -40,6 +44,6 @@ app.use(AuthRoute);
 
 // store.sync();
 
-app.listen(process.env.APP_PORT, () =>{
-    console.log('Server is up');
+app.listen(process.env.APP_PORT, () => {
+  console.log("Server is up");
 });
