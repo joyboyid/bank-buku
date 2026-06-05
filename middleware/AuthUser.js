@@ -1,6 +1,6 @@
 import User from "../models/UserModel.js";
 
-export const vrifyUser = async (req, res, next) =>{
+export const verifyUser = async (req, res, next) =>{
     if(!req.session.userId){
         return res.status(401).json({msg: "Mohon login ke akun Anda!"});
     }
@@ -9,19 +9,16 @@ export const vrifyUser = async (req, res, next) =>{
             uuid: req.session.userId
         }
     });
-    if(!user) return res.status(404).json({msg: "User tidak ditemukan"});
+    if (!user) return res.status(404).json({ msg: "User tidak ditemukan" });
     req.userId = user.id;
     req.role = user.role; 
     next();
 }
 
-export const adminOn = async (req, res, next) =>{
-    const user = await User.findOne({
-        where: {
-            uuid: req.session.userId
-        }
-    });
-    if(!user) return res.status(404).json({msg: "User tidak ditemukan"});
-    if(user.role !== "admin") return res.status(403).json({msg: "Akses terlarang"});
+export const adminOn = (req, res, next) => {
+    // verifyUser must run before this middleware (it sets req.role after validating session + user)
+    if (req.role !== "admin") {
+        return res.status(403).json({ msg: "Restricted Area" });
+    }
     next();
-}
+};

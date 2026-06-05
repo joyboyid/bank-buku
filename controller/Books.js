@@ -39,7 +39,7 @@ export const getBookById = async(req, res) => {
                 uuid: req.params.id
             }
         });
-        if(!book) return res.status(404).json({msg: "Data Not found!"});
+        if(!book) return res.status(404).json({msg: "Data not found!"});
         let response;
         if(req.role === "admin"){
             response = await Book.findOne({
@@ -81,7 +81,7 @@ export const createBook = async(req, res) => {
             jenis_buku: jenis_buku,
             userId: req.userId
         });
-        res.status(201).json({msg: "Books added!"});
+        res.status(201).json({ msg: "Book added!" });
     } catch (error) {
         res.status(500).json({msg: error.message});
     }
@@ -94,7 +94,7 @@ export const updateBook = async(req, res) => {
                 uuid: req.params.id
             }
         });
-        if(!book) return res.status(404).json({msg: "Data Not found!"});
+        if(!book) return res.status(404).json({msg: "Data not found!"});
         const {nama_buku, penulis, penerbit, thn_terbit, jenis_buku} = req.body;
         if(req.role === "admin"){
             await Book.update({nama_buku, penulis, penerbit, thn_terbit, jenis_buku},{
@@ -103,14 +103,14 @@ export const updateBook = async(req, res) => {
                 }
             });
         }else{
-            if(req.userId !== book.userId) return res.status(403).json({msg: "Ristricted Area!"});
+            if(req.userId !== book.userId) return res.status(403).json({msg: "Restricted Area!"});
             await Book.update({nama_buku, penulis, penerbit, thn_terbit, jenis_buku},{
                 where:{
                     [Op.and]:[{id: book.id}, {userId: req.userId}]
                 },
             });
         }
-        res.status(200).json({msg: "Updated!"});
+        res.status(200).json({ msg: "Book updated!" });
     } catch (error) {
         res.status(500).json({msg: error.message});
     }
@@ -123,23 +123,22 @@ export const deleteBook = async (req, res) => {
                 uuid: req.params.id
             }
         });
-        if(!book) return res.status(404).json({msg: "Data Not found!"});
-        const {nama_buku, penulis, penerbit, thn_terbit, jenis_buku} = req.body;
-        if(req.role === "admin"){
+        if (!book) return res.status(404).json({ msg: "Data not found!" });
+        if (req.role === "admin") {
             await Book.destroy({
-                where:{
+                where: {
                     id: book.id
                 }
             });
-        }else{
-            if(req.userId !== book.userId) return res.status(403).json({msg: "Ristricted Area!"});
+        } else {
+            if(req.userId !== book.userId) return res.status(403).json({msg: "Restricted Area!"});
             await Book.destroy({
                 where:{
                     [Op.and]:[{id: book.id}, {userId: req.userId}]
                 },
             });
         }
-        res.status(200).json({msg: "Data Deleted!!!"});
+        res.status(200).json({ msg: "Book deleted!" });
     } catch (error) {
         res.status(500).json({msg: error.message});
     }

@@ -6,14 +6,14 @@ import {
     updateBook,
     deleteBook
 } from "../controller/Books.js";
-import { vrifyUser } from "../middleware/AuthUser.js";
+import { verifyUser } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
-router.get('/books', vrifyUser, getBooks);
-router.get('/books/:id', vrifyUser, getBookById);
-router.post('/books', vrifyUser, createBook);
-router.patch('/books/:id', vrifyUser, updateBook);
-router.delete('/books/:id', vrifyUser, deleteBook);
+router.get('/books', verifyUser, getBooks);
+router.get('/books/:id', verifyUser, getBookById);
+router.post('/books', verifyUser, createBook);
+router.patch('/books/:id', verifyUser, updateBook);
+router.delete('/books/:id', verifyUser, deleteBook);
 
 export default router;

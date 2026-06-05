@@ -15,9 +15,6 @@ const sessionStore = SequelizeStore(session.Store);
 const store = new sessionStore({
   db: db,
 });
-// (async()=>{
-//     await db.sync();
-// })();
 
 app.use(
   session({
@@ -42,8 +39,23 @@ app.use(UserRoute);
 app.use(BookRoute);
 app.use(AuthRoute);
 
-// store.sync();
+const startServer = async () => {
+  try {
+    await db.authenticate();
+    console.log("Database connected");
 
-app.listen(process.env.APP_PORT, () => {
-  console.log("Server is up");
-});
+    // Uncomment the following if you want to auto-sync models (use with caution in production)
+    // await db.sync();
+    // await store.sync();
+
+    app.listen(process.env.APP_PORT, () => {
+      console.log(`Server is running on port ${process.env.APP_PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database:", error.message);
+    if (error.original) console.error("Original error:", error.original.message || error.original);
+    process.exit(1);
+  }
+};
+
+startServer();
